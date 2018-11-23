@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.views import View
+import main.models
 from django.views.generic import DetailView, ListView
 
 # Create your views here.
@@ -8,8 +9,8 @@ from django.views.generic import DetailView, ListView
 class Index(View):
 
     def get(self, request):
-
-        return render(request, 'base.html')
+        posts = main.models.Post.objects.all()
+        return render(request, 'index.html', context={'posts': posts})
 
 
 class About(View):
@@ -28,6 +29,15 @@ class Contact(View):
 
 class Post(View):
 
-    def get(self, request):
+    def get(self, request, slug):
+        post = main.models.Post.objects.get(slug=slug)
+        return render(request, 'post.html', context={'post': post})
 
-        return render(request, 'post.html')
+
+class Subscribe(View):
+
+    def post(self, request):
+        email = request.POST.get('subscribe_email')
+        sub = main.models.Subscribe.objects.create(email=email)
+        sub.save()
+        return HttpResponse('Спасибо за подписку')
