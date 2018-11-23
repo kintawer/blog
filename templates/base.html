@@ -9,15 +9,25 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Clean Blog - Start Bootstrap Theme</title>
+    <title>
+			{% block title %}
+				Seems good blog :)
+			{% endblock %}
+		</title>
+
+		{# Favicon #}
+		<link rel="icon" href="{% static '/img/favicon-wheelchair-alt.ico' %}"
+					type="image/ico">
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
     <link href="{% static "vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+					type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,
+    800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/clean-blog.css' %}" rel="stylesheet" type="text/css">
@@ -30,46 +40,46 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+        <a class="navbar-brand" href="/">Seems Good</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fas fa-bars"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about.html">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="post.html">Sample Post</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact</a>
-            </li>
-          </ul>
-        </div>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="/">Главная</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/about">Об авторе</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/contact">Обратная связь</a>
+						</li>
+					</ul>
+				</div>
       </div>
     </nav>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('{% static 'img/home-bg.jpg' %}')">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="site-heading">
-              <h1>Clean Blog</h1>
-              <span class="subheading">A Blog Theme by Start Bootstrap</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+		{% block page_header %}
+			<header class="masthead" style="background-image: url('{% static 'img/home-bg1.jpg' %}')">
+				<div class="overlay"></div>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-8 col-md-10 mx-auto">
+							<div class="site-heading">
+								<h1>Seems Good Blog</h1>
+								<span class="subheading">Мой блог обо всем.<br>Enjoy ;)</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+		{% endblock %}
 
     <!-- Main Content -->
+		{% block content %}
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
@@ -133,7 +143,7 @@
         </div>
       </div>
     </div>
-
+		{% endblock %}
     <hr>
 
     <!-- Footer -->
@@ -143,31 +153,40 @@
           <div class="col-lg-8 col-md-10 mx-auto">
             <ul class="list-inline text-center">
               <li class="list-inline-item">
-                <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#">
+                <a href="http://github.com/kintawer">
                   <span class="fa-stack fa-lg">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                   </span>
                 </a>
               </li>
+							<li class="list-inline-item">
+								<a href="https://shikimori.org/kintawer">
+									<span class="fa-stack fa-lg">
+										<i class="fas fa-circle fa-stack-2x"></i>
+										<img class="fa-stack-2x" src="{% static 'img/shiki.png' %}" style="border-radius: 50px">
+									</span>
+								</a>
+							</li>
+							<li class="list-inline-item">
+                <a href="http://t.me/tgkint">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-telegram fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
             </ul>
-            <p class="copyright text-muted">Copyright &copy; Your Website 2018</p>
+						<!-- Subscribe -->
+						<form class="text-center subscribe">
+							<div class="form-group">
+								<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+											 placeholder="Введите email">
+								<small id="emailHelp" class="form-text text-muted">Я никому не скажу ваш Email, обещаю.</small>
+							</div>
+							<button type="submit" class="btn btn-primary">Подписаться</button>
+						</form>
+            <p class="copyright text-muted">Copyright &copy; Seems Good Blog 2018</p>
           </div>
         </div>
       </div>
