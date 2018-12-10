@@ -6,14 +6,14 @@
 
 <!-- Page Header -->
 {% block page_header %}
-    <header class="masthead" style="background-image: url({% static 'img/post-bg.jpg' %})">
+    <header class="masthead" style="background-image: url({{ post.bg_img.url }})">
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <div class="post-heading">
               <h1>{{ post.title }}</h1>
-              <h2 class="subheading">{{ post.content|safe|truncatewords:15 }}</h2>
+              <h2 class="subheading">{{ post.sub_title }}</h2>
               <span class="meta">Опубликовано
                 <a href="{% url 'about' %}">Автором</a>
                  {{ post.publish_date }}</span>
@@ -30,9 +30,54 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            {{ post.content|safe }}
+            {{ post.content }}
           </div>
         </div>
       </div>
     </article>
+
+    <hr>
+
+		<!-- Post Comments -->
+	<div class="container comments">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>Комментарии:</h3>
+			</div>
+		</div>
+
+		{% if comments is not None %}
+			{% for comment in comments %}
+			<div class="row mb-3 justify-content-center">
+				<div class="card">
+					<div class="card-header">
+						<strong>{{ comment.nickname }}</strong> <span class="text-muted">{{ comment.date }}</span>
+					</div>
+					<div class="card-body">
+						{{ comment.text }}
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		{% endif %}
+
+			{#		Comment form#}
+				<div class="row justify-content-center">
+					<form class="w-100" action="{% url 'comment' %}" method="post">{% csrf_token %}
+						<div class="form-group">
+							<input type="text" class="form-control" name="nickname" placeholder="Имя...">
+						</div>
+						<div class="form-group">
+							<textarea class="form-control" rows="3" name="comment" placeholder="Комментарий..."></textarea>
+						</div>
+						<input type="number" name="post-id" hidden value="{{ post.id }}">
+						<div class="form-group text-center">
+							<button class="btn btn-primary" type="submit">Отправить</button>
+						</div>
+					</form>
+				</div>
+
+		</div>
+
+	</div>
 {% endblock %}

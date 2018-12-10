@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import Index, About, Contact, Post, Subscribe
+from django.conf import settings
+from django.conf.urls.static import static
+from .views import Index, About, Contact, Post, Subscribe, Comment
 
 urlpatterns = [
     path('', Index.as_view()),
@@ -23,5 +25,6 @@ urlpatterns = [
     path('contact/', Contact.as_view(), name='contact'),
     path('post/<slug:slug>', Post.as_view(), name='post'),
     path('subscribe/', Subscribe.as_view(), name='subscribe'),
+    path('comment/', Comment.as_view(), name='comment'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
