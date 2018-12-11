@@ -37,10 +37,36 @@
 					</div>
 					<hr>
 				{% endfor %}
-				<!-- Pager -->
-				<div class="clearfix">
-					<a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-				</div>
+				<!-- Paginator -->
+				<nav>
+					<ul class="pagination justify-content-center">
+						{% if posts.has_previous %}
+							<li class="page-item">
+								<a class="page-link text-dark" href="?page={{ posts.previous_page_number }}">Назад</a>
+							</li>
+						{% endif %}
+
+
+						{% for page in posts.paginator.page_range %}
+							<li class="page-item">
+									{% if posts.number == page %}
+										<span class="page-link text-dark"><b><u>{{ page }}</u></b></span>
+									{% else %}
+										<a class="page-link text-dark" href="?page={{ page }}">
+										{{ page }}
+										</a>
+									{% endif %}
+							</li>
+						{% endfor %}
+
+						{% if posts.has_next %}
+							<li class="page-item">
+								<a class="page-link text-dark" href="?page={{ posts.next_page_number }}">Далее</a>
+							</li>
+						{% endif %}
+					</ul>
+				</nav>
+
 			</div>
 		</div>
 	</div>

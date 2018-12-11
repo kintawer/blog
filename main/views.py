@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import Http404
+from django.core.paginator import Paginator
 import main.models
 
 # Create your views here.
@@ -9,7 +10,10 @@ import main.models
 class Index(View):
 
     def get(self, request):
-        posts = main.models.Post.objects.all()
+        post_list = main.models.Post.objects.all()
+        paginator = Paginator(post_list, 3)
+        page = request.GET.get('page')
+        posts = paginator.get_page(page)
         return render(request, 'index.html', context={'posts': posts})
 
 
