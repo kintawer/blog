@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	{{ tag.title }} - {{ block.super }}
+{% endblock %}
+
+{% block page_header %}
+	<header class="masthead" style="background-image: url('{% static 'img/cat-bg.jpg' %}'); background-size: cover;">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-10 mx-auto">
+					<div class="site-heading">
+						<h1>Посты с тегом:</h1>
+						<span class="subheading">{{ tag.title|title }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-md-10 mx-auto">
+				{% for post in tag.posts.all %}
+					<div class="post-preview">
+						<a href="{% url 'post' post.slug %}">
+							<h2 class="post-title">
+								{{ post.title }}
+							</h2>
+							<h3 class="post-subtitle">
+								{{ post.sub_title }}
+							</h3>
+						</a>
+						<p class="post-meta">Опубликовано
+							<a href="{% url 'about' %}">Автором</a>
+							{{ post.publish_date }}</p>
+
+					<!-- Tags -->
+						{% if post.tags.all %}
+							<p class="post-meta">Теги:
+								{% for tag in post.tags.all %}
+								<a href="{% url 'tag_select' tag.slug %}">{{ tag.title }} </a>
+								{% endfor %}
+							</p>
+						{% endif %}
+					</div>
+
+					<hr>
+
+				{% endfor %}
+
+			</div>
+		</div>
+	</div>
+{% endblock %}

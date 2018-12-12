@@ -24,18 +24,11 @@ class About(View):
         return render(request, 'about.html')
 
 
-class Contact(View):
-
-    def get(self, request):
-
-        return render(request, 'contact.html')
-
-
 class Post(View):
 
     def get(self, request, slug):
         try:
-            post = main.models.Post.objects.get(slug=slug)
+            post = main.models.Post.objects.get(slug__iexact=slug)
         except main.models.Post.DoesNotExist:
             raise Http404("Post does not exist")
 
@@ -45,6 +38,13 @@ class Post(View):
             comments = None
 
         return render(request, 'post.html', context={'post': post, 'comments': comments})
+
+
+class TagSelect(View):
+
+    def get(self, request, slug):
+        tag = main.models.Tag.objects.get(slug__iexact=slug)
+        return render(request, 'tag_select.html', context={'tag': tag})
 
 
 class Subscribe(View):

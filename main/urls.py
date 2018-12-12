@@ -17,13 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Index, About, Contact, Post, Subscribe, Comment
+from .views import Index, About, TagSelect, Post, Subscribe, Comment
 
 urlpatterns = [
-    path('', Index.as_view()),
+    path('', Index.as_view(), name='index'),
     path('about/', About.as_view(), name='about'),
-    path('contact/', Contact.as_view(), name='contact'),
     path('post/<slug:slug>', Post.as_view(), name='post'),
+    path('tag/<slug:slug>', TagSelect.as_view(), name='tag_select'),
     path('subscribe/', Subscribe.as_view(), name='subscribe'),
     path('comment/', Comment.as_view(), name='comment'),
 

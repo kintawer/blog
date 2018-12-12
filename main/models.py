@@ -4,11 +4,12 @@ from froala_editor.fields import FroalaField
 # Create your models here.
 
 
-# class Category(models.Model):
-#     category_name = models.CharField(max_length=50, blank=False, null=False)
-#
-#     def __str__(self):
-#         return self.category_name
+class Tag(models.Model):
+    title = models.CharField(max_length=50, blank=False, null=False)
+    slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Post(models.Model):
@@ -19,6 +20,7 @@ class Post(models.Model):
     content = FroalaField()
     publish_date = models.DateField(auto_now_add=True)
     slug = models.SlugField(default='slug', unique=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
 
     def __str__(self):
         return self.title
