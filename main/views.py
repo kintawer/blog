@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import Http404
 from django.core.paginator import Paginator
@@ -27,10 +27,7 @@ class About(View):
 class Post(View):
 
     def get(self, request, slug):
-        try:
-            post = main.models.Post.objects.get(slug__iexact=slug)
-        except main.models.Post.DoesNotExist:
-            raise Http404("Post does not exist")
+        post = get_object_or_404(main.models.Post, slug__iexact=slug)
 
         try:
             comments = main.models.Comment.objects.filter(post=post.id).order_by('date')
@@ -43,10 +40,11 @@ class Post(View):
 class TagSelect(View):
 
     def get(self, request, slug):
-        tag = main.models.Tag.objects.get(slug__iexact=slug)
+        tag = get_object_or_404(main.models.Tag, slug__iexact=slug)
         return render(request, 'tag_select.html', context={'tag': tag})
 
 
+#
 class Subscribe(View):
 
     def post(self, request):
@@ -56,6 +54,7 @@ class Subscribe(View):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
+# create comment
 class Comment(View):
 
     def post(self, request):

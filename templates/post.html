@@ -17,6 +17,14 @@
               <span class="meta">Опубликовано
                 <a href="{% url 'about' %}">Автором</a>
                  {{ post.publish_date }}</span>
+						<!-- Tags -->
+							{% if post.tags.all %}
+								<p class="post-meta">Теги:
+									{% for tag in post.tags.all %}
+										<a class="text-white" href="{% url 'tag_select' tag.slug %}">{{ tag.title }} </a>
+									{% endfor %}
+								</p>
+							{% endif %}
             </div>
           </div>
         </div>

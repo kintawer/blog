@@ -1,5 +1,8 @@
 from django.db import models
 from froala_editor.fields import FroalaField
+from django.db.models import signals
+from blog.tasks import send_post_email
+from django.http import HttpRequest
 
 # Create your models here.
 
@@ -34,6 +37,19 @@ class Subscribe(models.Model):
         return self.email
 
 
+# celery def after save post
+def post_post_save(sender, instance, signal, *args, **kwargs):
+    # Send verification email
+    sub_emails = list(Subscribe.objects.values('email'))
+    emails_list = []
+    for sub_email in sub_emails:
+        emails_list.append(sub_email['email'])
+    send_post_email.delay(sub_emails=emails_list, post_title=instance.title, slug=instance.slug)
+
+
+signals.post_save.connect(post_post_save, sender=Post)
+
+
 class Comment(models.Model):
     nickname = models.CharField(max_length=30, blank=False, null=False)
     text = models.TextField(blank=False, null=False)
@@ -42,3 +58,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return '{}: {}'.format(self.nickname, self.text)
+
+

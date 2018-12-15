@@ -134,3 +134,21 @@ FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier' ,'code_view'
         'entities', 'file', 'font_family', 'font_size', 'fullscreen', 'image_manager', 'image', 'inline_style',
         'line_breaker', 'link', 'lists', 'paragraph_format', 'paragraph_style', 'quick_insert', 'quote', 'save', 'table',
         'url', 'video')
+
+# SMTP settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'kintawer@gmail.com'
+DEFAULT_FROM_EMAIL = 'kintawer@gmail.com'
+SERVER_EMAIL = 'kintawer@gmail.com'
+# todo: enter password!
+EMAIL_HOST_PASSWORD = ''
+
+# REDIS related settings
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
