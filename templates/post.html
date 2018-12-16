@@ -16,7 +16,7 @@
               <h2 class="subheading">{{ post.sub_title }}</h2>
               <span class="meta">Опубликовано
                 <a href="{% url 'about' %}">Автором</a>
-                 {{ post.publish_date }}</span>
+                 {{ post.publish_date|date }}</span>
 						<!-- Tags -->
 							{% if post.tags.all %}
 								<p class="post-meta">Теги:
@@ -70,20 +70,30 @@
 		{% endif %}
 
 			{#		Comment form#}
-				<div class="row justify-content-center">
-					<form class="w-100" action="{% url 'comment' %}" method="post">{% csrf_token %}
-						<div class="form-group">
-							<input type="text" class="form-control" name="nickname" placeholder="Имя...">
-						</div>
-						<div class="form-group">
-							<textarea class="form-control" rows="3" name="comment" placeholder="Комментарий..."></textarea>
-						</div>
-						<input type="number" name="post-id" hidden value="{{ post.id }}">
-						<div class="form-group text-center">
-							<button class="btn btn-primary" type="submit">Отправить</button>
-						</div>
-					</form>
-				</div>
+			<div class="row justify-content-center">
+				<form class="w-100" action="{% url 'comment' %}" method="post">{% csrf_token %}
+					<div class="form-group">
+						{{ comment_form.nickname }}
+						{% if comment_form.nickname.errors %}
+							<div class="m-auto alert alert-danger" style="max-width: 314px">
+							{{ comment_form.nickname.errors }}
+							</div>
+						{% endif %}
+					</div>
+					<div class="form-group">
+						{{ comment_form.text }}
+						{% if comment_form.text.errors %}
+							<div class="m-auto alert alert-danger" style="max-width: 314px">
+							{{ comment_form.text.errors }}
+							</div>
+						{% endif %}
+					</div>
+					<input type="number" name="{{ comment_form.post.name }}" hidden value="{{ post.id }}">
+					<div class="form-group text-center">
+						<button class="btn btn-primary" type="submit">Отправить</button>
+					</div>
+				</form>
+			</div>
 
 		</div>
 

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_header %}
+	<header class="masthead" style="background-image: url('{% static 'img/home-bg1.jpg' %}')">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-10 mx-auto">
+					<div class="site-heading">
+						<h1>Seems Good Blog</h1>
+						<span class="subheading">Мой блог обо всем.<br>Enjoy ;)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<form action="{% url 'tag_create' %}" method="post" class="m-auto"> {% csrf_token %}
+			{% for field in form %}
+				<div class="form-group">
+					{{ field.label_tag }}
+					{{ field }}
+					{% if field.errors %}
+						<div class="alert alert-danger" role="alert">
+							{{ field.errors }}
+						</div>
+					{% endif %}
+				</div>
+			{% endfor %}
+		<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+
+{% endblock %}

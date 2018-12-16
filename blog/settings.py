@@ -144,7 +144,7 @@ EMAIL_HOST_USER = 'kintawer@gmail.com'
 DEFAULT_FROM_EMAIL = 'kintawer@gmail.com'
 SERVER_EMAIL = 'kintawer@gmail.com'
 # todo: enter password!
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = '2VqzB1At'
 
 # REDIS related settings
 REDIS_HOST = '127.0.0.1'

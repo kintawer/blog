@@ -21,7 +21,7 @@ class Post(models.Model):
     sub_title = models.TextField(blank=True, null=True, default='')
     bg_img = models.ImageField(upload_to='bg_posts/')
     content = FroalaField()
-    publish_date = models.DateField(auto_now_add=True)
+    publish_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(default='slug', unique=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
 
@@ -53,7 +53,7 @@ signals.post_save.connect(post_post_save, sender=Post)
 class Comment(models.Model):
     nickname = models.CharField(max_length=30, blank=False, null=False)
     text = models.TextField(blank=False, null=False)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -37,7 +37,7 @@
 						</a>
 						<p class="post-meta">Опубликовано
 							<a href="{% url 'about' %}">Автором</a>
-							{{ post.publish_date }}</p>
+							{{ post.publish_date|date }}</p>
 
 					<!-- Tags -->
 						{% if post.tags.all %}
