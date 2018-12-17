@@ -2,7 +2,8 @@ from django.db import models
 from froala_editor.fields import FroalaField
 from django.db.models import signals
 from blog.tasks import send_post_email
-from django.http import HttpRequest
+from django.shortcuts import reverse
+import uuid
 
 # Create your models here.
 
@@ -10,6 +11,12 @@ from django.http import HttpRequest
 class Tag(models.Model):
     title = models.CharField(max_length=50, blank=False, null=False)
     slug = models.SlugField(max_length=50, unique=True)
+
+    def get_absolute_url(self):
+        return reverse('tag_select', kwargs={'slug': self.slug})
+
+    def get_update_url(self):
+        return reverse('tag_update', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
@@ -24,6 +31,10 @@ class Post(models.Model):
     publish_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(default='slug', unique=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
+    is_notified = models.BooleanField(auto_created=True, default=False, blank=False)
+
+    def get_absolute_url(self):
+        return reverse('post', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
@@ -31,22 +42,34 @@ class Post(models.Model):
 
 class Subscribe(models.Model):
     email = models.EmailField(blank=False, null=False, unique=True)
+    unsub_key = models.UUIDField(default=uuid.uuid4, blank=False)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.email
 
+    # getting dict {'email': , 'unsub_key': }
+    def get_email_with_key(self):
+        return {'email': self.email, 'unsub_key': str(self.unsub_key)}
+
 
 # celery def after save post
 def post_post_save(sender, instance, signal, *args, **kwargs):
-    # Send verification email
-    sub_emails = list(Subscribe.objects.values('email'))
-    emails_list = []
-    for sub_email in sub_emails:
-        emails_list.append(sub_email['email'])
-    send_post_email.delay(sub_emails=emails_list, post_title=instance.title, slug=instance.slug)
+    # Send notification
+    if not instance.is_notified:
+
+        instance.is_notified = True
+        instance.save()
+
+        sub_list = []
+        for sub in Subscribe.objects.filter(is_active=True):
+            sub_list.append(sub.get_email_with_key())
+
+        if sub_list:
+            send_post_email.delay(sub_list=sub_list, post_title=instance.title, slug=instance.slug)
 
 
+# signal for send email notification
 signals.post_save.connect(post_post_save, sender=Post)
 
 

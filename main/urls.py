@@ -17,15 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Index, About, TagCreate, TagSelect, Post, Subscribe, Comment
+from .views import Index, About, TagCreate, TagSelect, TagUpdate, Post, Subscribe, UnSubscribe
 
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('about/', About.as_view(), name='about'),
     path('post/<slug:slug>', Post.as_view(), name='post'),
     path('tag/create', TagCreate.as_view(), name='tag_create'),
+    path('tag/<slug:slug>/update/', TagUpdate.as_view(), name='tag_update'),
     path('tag/<slug:slug>', TagSelect.as_view(), name='tag_select'),
     path('subscribe/', Subscribe.as_view(), name='subscribe'),
-    path('comment/', Comment.as_view(), name='comment'),
+    path('unsubscribe/<str:uuid>', UnSubscribe.as_view(), name='un_subscribe'),
+    # path('comment/', Comment.as_view(), name='comment'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

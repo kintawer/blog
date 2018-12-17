@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tag, Comment
+from .models import Tag, Comment, Subscribe
 from django.core.exceptions import ValidationError
 
 
@@ -34,6 +34,17 @@ class CommentForm(forms.ModelForm):
 
     def clean_nickname(self):
         new_nickname = self.cleaned_data['nickname']
-        if new_nickname == 'debil':
-            raise ValidationError('Sam ti debil')
+
+        if all(char in new_nickname for char in '@#$%^&*()., '):
+            raise ValidationError('Nickname contains char: @#$%^&*()., ')
         return new_nickname
+
+
+class SubForm(forms.ModelForm):
+    class Meta:
+        model = Subscribe
+        fields = ['email']
+
+    widgets = {
+        'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Введите email'}),
+    }

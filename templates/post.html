@@ -71,7 +71,7 @@
 
 			{#		Comment form#}
 			<div class="row justify-content-center">
-				<form class="w-100" action="{% url 'comment' %}" method="post">{% csrf_token %}
+				<form class="w-100" action="{% url 'post' post.slug %}" method="post">{% csrf_token %}
 					<div class="form-group">
 						{{ comment_form.nickname }}
 						{% if comment_form.nickname.errors %}
