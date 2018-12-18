@@ -17,17 +17,24 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Index, About, TagCreate, TagSelect, TagUpdate, Post, Subscribe, UnSubscribe
+from .views import *
 
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('about/', About.as_view(), name='about'),
-    path('post/<slug:slug>', Post.as_view(), name='post'),
+
+    path('post/create', PostCreate.as_view(), name='post_create'),
+    path('post/<slug:slug>', PostRead.as_view(), name='post_select'),
+    path('post/<slug:slug>/delete/', PostDelete.as_view(), name='post_delete'),
+    path('post/<slug:slug>/update/', PostUpdate.as_view(), name='post_update'),
+
     path('tag/create', TagCreate.as_view(), name='tag_create'),
-    path('tag/<slug:slug>/update/', TagUpdate.as_view(), name='tag_update'),
     path('tag/<slug:slug>', TagSelect.as_view(), name='tag_select'),
+    path('tag/<slug:slug>/delete/', TagDelete.as_view(), name='tag_delete'),
+    path('tag/<slug:slug>/update/', TagUpdate.as_view(), name='tag_update'),
+
     path('subscribe/', Subscribe.as_view(), name='subscribe'),
     path('unsubscribe/<str:uuid>', UnSubscribe.as_view(), name='un_subscribe'),
-    # path('comment/', Comment.as_view(), name='comment'),
+    path('comment/', Comment.as_view(), name='comment'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

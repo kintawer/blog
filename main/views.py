@@ -3,7 +3,8 @@ from django.views import View
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 import main.models
-from .forms import CommentForm, TagForm, SubForm
+from .forms import CommentForm, TagForm, SubForm, PostForm
+from .utils import *
 
 
 def get_post_with_comments(slug):
@@ -34,7 +35,7 @@ class About(View):
         return render(request, 'about.html')
 
 
-class Post(View):
+class PostRead(View):
     def get(self, request, slug):
         # if method_get then comment form is empty
         comment_form = CommentForm()
@@ -43,52 +44,47 @@ class Post(View):
         return render(request, 'post.html', context={'post': post, 'comments': comments,
                                                      'comment_form': comment_form})
 
-    def post(self, request, slug):
-        # if method_post and comment form is valid then empty form, else contains data
-        comment_form = CommentForm(request.POST)
 
-        if comment_form.is_valid():
-            comment_form.save()
-            comment_form = CommentForm()
-
-        post, comments = get_post_with_comments(slug)
-
-        return render(request, 'post.html', context={'post': post, 'comments': comments,
-                                                     'comment_form': comment_form})
+class PostCreate(ObjectCreateMixin, View):
+    model = main.models.Post
+    template = 'post_create.html'
+    model_form = PostForm
 
 
-class TagSelect(View):
+class PostUpdate(ObjectUpdateMixin, View):
+    model = main.models.Post
+    template = 'post_update.html'
+    model_form = PostForm
 
-    def get(self, request, slug):
-        tag = get_object_or_404(main.models.Tag, slug__iexact=slug)
-        return render(request, 'tag_select.html', context={'tag': tag})
+
+class PostDelete(ObjectDeleteMixin, View):
+    model = main.models.Post
+    template = 'post_delete.html'
+    redirect_url = 'index'
+
+
+class TagSelect(ObjectReadMixin, View):
+    model = main.models.Tag
+    template = 'tag_select.html'
 
 
 # view for create new tags but you can use admin panel which better
-class TagCreate(View):
-
-    def get(self, request):
-        form = TagForm()
-        return render(request, 'tag_create.html', context={'form': form})
-
-    def post(self, request):
-        bound_form = TagForm(request.POST)
-        if bound_form.is_valid():
-            new_tag = bound_form.save()
-            return render(request, 'tag_select.html', context={'tag': new_tag})
-        return render(request, 'tag_create.html', context={'form': bound_form})
+class TagCreate(ObjectCreateMixin, View):
+    model = main.models.Tag
+    template = 'tag_create.html'
+    model_form = TagForm
 
 
-class TagUpdate(View):
+class TagUpdate(ObjectUpdateMixin, View):
+    model = main.models.Tag
+    template = 'tag_update.html'
+    model_form = TagForm
 
-    def get(self, request, slug):
-        tag = get_object_or_404(main.models.Tag, slug__iexact=slug)
-        tag_form = TagForm(instance=tag)
-        return render(request, 'tag_update.html', context={'tag': tag, 'form': tag_form})
 
-    def post(self, request, slug):
-        new_tag = get_object_or_404(main.models.Tag, slug__iexact=slug)
-        return redirect(new_tag)
+class TagDelete(ObjectDeleteMixin, View):
+    model = main.models.Tag
+    template = 'tag_delete.html'
+    redirect_url = 'index'
 
 
 class Subscribe(View):
@@ -112,20 +108,22 @@ class UnSubscribe(View):
         return HttpResponse('Вы ({}) успешно отписались от рассылки уведомлений!'
                             .format(sub.email))
 
+
 # view for create comments but added POST in post view for this
-# class Comment(View):
-#
-#     def post(self, request):
-#         comment_form = CommentForm(request.POST)
-#
-#         if comment_form.is_valid():
-#             new_comment = comment_form.save()
-#             comment_form = CommentForm()
-#
-#         post = get_object_or_404(main.models.Post, pk=request.POST.get('post'))
-#         try:
-#             comments = main.models.Comment.objects.filter(post=post.id).order_by('date').reverse()
-#         except main.models.Comment.DoesNotExist:
-#             comments = None
-#
-#         return render(request, 'post.html', context={'post': post, 'comments': comments, 'comment_form': comment_form})
+class Comment(View):
+
+    def post(self, request):
+        comment_form = CommentForm(request.POST)
+
+        # cleaned_data always contains post
+        post_id = comment_form.data['post']
+        post = main.models.Post.objects.get(pk=post_id)
+        if comment_form.is_valid():
+            new_comment = comment_form.save()
+            return redirect(post)
+
+        post, comments = get_post_with_comments(post.slug)
+        return render(request, 'post.html', context={'post': post, 'comments': comments, 'comment_form': comment_form})
+
+
+

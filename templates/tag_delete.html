@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	Удаление тега - {{ block.super }}
+{% endblock %}
+
+{% block page_header %}
+	<header class="masthead" style="background-image: url('{% static 'img/home-bg1.jpg' %}')">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-10 mx-auto">
+					<div class="site-heading">
+						<h1>Seems Good Blog</h1>
+						<span class="subheading">Удаление тега: {{ tag.title }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<form action="{% url 'tag_delete' tag.slug %}" method="post" class="m-auto"> {% csrf_token %}
+			<h3>Вы точно хотите удалить тег: <b>"{{ tag.title }}"</b>?</h3>
+			<a href="{% url 'tag_select' tag.slug %}" class="btn btn-light">Отменить</a>
+		<button type="submit" class="btn btn-danger">Удалить</button>
+		</form>
+	</div>
+
+{% endblock %}

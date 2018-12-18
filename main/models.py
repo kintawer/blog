@@ -26,7 +26,7 @@ class Post(models.Model):
     # category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     sub_title = models.TextField(blank=True, null=True, default='')
-    bg_img = models.ImageField(upload_to='bg_posts/')
+    bg_img = models.ImageField(upload_to='bg_posts/', blank=True)
     content = FroalaField()
     publish_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(default='slug', unique=True)
@@ -34,7 +34,7 @@ class Post(models.Model):
     is_notified = models.BooleanField(auto_created=True, default=False, blank=False)
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'slug': self.slug})
+        return reverse('post_select', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title

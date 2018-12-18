@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-	Создание тега - {{ block.super }}
+	Обновление поста - {{ post.title }}
 {% endblock %}
 
 {% block page_header %}
@@ -13,7 +13,7 @@
 				<div class="col-lg-8 col-md-10 mx-auto">
 					<div class="site-heading">
 						<h1>Seems Good Blog</h1>
-						<span class="subheading">Создание тега</span>
+						<span class="subheading">Редактирование поста: {{ post.title }}</span>
 					</div>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 
 {% block content %}
 	<div class="container">
-		<form action="{% url 'tag_create' %}" method="post" class="m-auto"> {% csrf_token %}
+		<form action="{% url 'post_update' post.slug %}" method="post" class="text-center m-auto"> {% csrf_token %}
 			{% for field in form %}
 				<div class="form-group">
 					{{ field.label_tag }}
@@ -35,8 +35,7 @@
 					{% endif %}
 				</div>
 			{% endfor %}
-		<button type="submit" class="btn btn-primary">Создать</button>
+		<button type="submit" class="btn btn-primary">Редактировать</button>
 		</form>
 	</div>
-
 {% endblock %}
