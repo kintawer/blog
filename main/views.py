@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views import View
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 import main.models
 from .forms import CommentForm, TagForm, SubForm, PostForm
@@ -21,10 +21,17 @@ class Index(View):
 
     def get(self, request):
         # posts ordered by published date
-        post_list = main.models.Post.objects.all().order_by('publish_date').reverse()
+        query = request.GET.get('search', '')
+        if query:
+            post_list = main.models.Post.objects.filter(Q(title__icontains=query) |
+                                                        Q(content__icontains=query) |
+                                                        Q(sub_title__icontains=query))
+        else:
+            post_list = main.models.Post.objects.all().order_by('publish_date').reverse()
         paginator = Paginator(post_list, 5)
         page = request.GET.get('page')
         posts = paginator.get_page(page)
+
         return render(request, 'index.html', context={'posts': posts})
 
 
@@ -42,25 +49,28 @@ class PostRead(View):
         post, comments = get_post_with_comments(slug)
 
         return render(request, 'post.html', context={'post': post, 'comments': comments,
-                                                     'comment_form': comment_form})
+                                                     'comment_form': comment_form, 'admin_panel': post})
 
 
-class PostCreate(ObjectCreateMixin, View):
+class PostCreate(LoginRequiredMixin, ObjectCreateMixin, View):
     model = main.models.Post
     template = 'post_create.html'
     model_form = PostForm
+    raise_exception = True
 
 
-class PostUpdate(ObjectUpdateMixin, View):
+class PostUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
     model = main.models.Post
     template = 'post_update.html'
     model_form = PostForm
+    raise_exception = True
 
 
-class PostDelete(ObjectDeleteMixin, View):
+class PostDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
     model = main.models.Post
     template = 'post_delete.html'
     redirect_url = 'index'
+    raise_exception = True
 
 
 class TagSelect(ObjectReadMixin, View):
@@ -69,22 +79,25 @@ class TagSelect(ObjectReadMixin, View):
 
 
 # view for create new tags but you can use admin panel which better
-class TagCreate(ObjectCreateMixin, View):
+class TagCreate(LoginRequiredMixin, ObjectCreateMixin, View):
     model = main.models.Tag
     template = 'tag_create.html'
     model_form = TagForm
+    raise_exception = True
 
 
-class TagUpdate(ObjectUpdateMixin, View):
+class TagUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
     model = main.models.Tag
     template = 'tag_update.html'
     model_form = TagForm
+    raise_exception = True
 
 
-class TagDelete(ObjectDeleteMixin, View):
+class TagDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
     model = main.models.Tag
     template = 'tag_delete.html'
     redirect_url = 'index'
+    raise_exception = True
 
 
 class Subscribe(View):
@@ -124,6 +137,3 @@ class Comment(View):
 
         post, comments = get_post_with_comments(post.slug)
         return render(request, 'post.html', context={'post': post, 'comments': comments, 'comment_form': comment_form})
-
-
-

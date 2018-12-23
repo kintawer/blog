@@ -1,0 +1,22 @@
+.comments .card{
+	font-size: 12pt;
+}
+.admin-panel{
+	position: fixed;
+    bottom: 30px;
+    right: 10px;
+	opacity: 0.3;
+
+}
+.admin-panel:hover{
+	opacity: 1;
+
+}
+.admin-panel a{
+	display: block;
+	font-size: 12px;
+
+}
+.search{
+	margin: auto 0 !important;
+}

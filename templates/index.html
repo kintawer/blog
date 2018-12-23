@@ -24,7 +24,7 @@
 			<div class="col-lg-8 col-md-10 mx-auto">
 				{% for post in posts %}
 					<div class="post-preview">
-						<a href="{% url 'post_select' post.slug %}">
+						<a href="{{ post.get_absolute_url }}">
 							<h2 class="post-title">
 								{{ post.title }}
 							</h2>
@@ -41,7 +41,7 @@
 						{% if post.tags.all %}
 							<p class="post-meta">Теги:
 								{% for tag in post.tags.all %}
-								<a href="{% url 'tag_select' tag.slug %}">{{ tag.title }} </a>
+								<a href="{{ tag.get_absolute_url }}">{{ tag.title }} </a>
 								{% endfor %}
 							</p>
 						{% endif %}
@@ -52,6 +52,7 @@
 				{% endfor %}
 
 				<!-- Paginator -->
+			{% if posts.paginator.num_pages != 1 %}
 				<nav>
 					<ul class="pagination justify-content-end">
 						{% if posts.has_previous %}
@@ -82,6 +83,7 @@
 						{% endif %}
 					</ul>
 				</nav>
+			{% endif %}
 
 			</div>
 		</div>

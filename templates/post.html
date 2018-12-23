@@ -6,7 +6,7 @@
 
 <!-- Page Header -->
 {% block page_header %}
-    <header class="masthead" style="background-image: url({{ post.bg_img.url }})">
+    <header class="masthead" {% if post.bg_img %}style="background-image: url({{ post.bg_img.url }})"{% else %}style="background-image: url('{% static 'img/home-bg1.jpg' %}')"{% endif %}>
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
@@ -21,7 +21,7 @@
 							{% if post.tags.all %}
 								<p class="post-meta">Теги:
 									{% for tag in post.tags.all %}
-										<a class="text-white" href="{% url 'tag_select' tag.slug %}">{{ tag.title }} </a>
+										<a class="text-white" href="{{ tag.get_absolute_url }}">{{ tag.title }} </a>
 									{% endfor %}
 								</p>
 							{% endif %}

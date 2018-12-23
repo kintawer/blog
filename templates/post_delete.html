@@ -23,9 +23,9 @@
 
 {% block content %}
 	<div class="container">
-		<form action="{% url 'post_delete' post.slug %}" method="post" class="m-auto"> {% csrf_token %}
+		<form action="{{ post.get_delete_url }}" method="post" class="m-auto"> {% csrf_token %}
 			<h3>Вы точно хотите удалить пост: <b>"{{ post.title }}"</b>?</h3>
-			<a href="{% url 'post_select' post.slug %}" class="btn btn-light">Отменить</a>
+			<a href="{{ post.get_absolute_url }}" class="btn btn-light">Отменить</a>
 		<button type="submit" class="btn btn-danger">Удалить</button>
 		</form>
 	</div>

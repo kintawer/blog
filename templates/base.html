@@ -31,7 +31,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/clean-blog.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/comments.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
 
 
   </head>
@@ -55,16 +55,11 @@
 							<a class="nav-link" href="{% url 'about' %}">Об авторе</a>
 						</li>
 
-{#						<li class="nav-item dropdown">#}
-{#							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#								Теги#}
-{#							</a>#}
-{#							<div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-{#								<a class="dropdown-item" href="#">Action</a>#}
-{#								<a class="dropdown-item" href="#">Another action</a>#}
-{#								<a class="dropdown-item" href="#">Something else here</a>#}
-{#							</div>#}
-{#						</li>#}
+						<li class="nav-item dropdown">
+							<form class="form-inline" action="{% url 'index' %}">
+								<input class="form-control search" type="search" placeholder="Search" aria-label="Search" name="search">
+							</form>
+						</li>
 
 					</ul>
 				</div>
@@ -142,7 +137,29 @@
         </div>
       </div>
     </footer>
+		<!-- Admin-panel -->
+		{% if request.user.is_authenticated and request.user.is_staff%}
+		<div class="admin-panel align-items-center">
+			{% block admin-panel %}
+				<a href="/admin" class="btn btn-primary">Admin</a>
+				<div class="dropdown show">
+					<a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Create
+					</a>
 
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<a class="dropdown-item" href="{% url 'post_create' %}">Post</a>
+						<a class="dropdown-item" href="{% url 'tag_create' %}">Tag</a>
+					</div>
+				</div>
+
+				{% if admin_panel %}
+					<a href="{{ admin_panel.get_update_url }}" class="btn btn-light">Edit</a>
+					<a href="{{ admin_panel.get_delete_url }}" class="btn btn-danger">Delete</a>
+				{% endif %}
+			{% endblock %}
+		</div>
+		{% endif %}
     <!-- Bootstrap core JavaScript -->
     <script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
     <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
@@ -151,5 +168,4 @@
     <script src="{% static "js/clean-blog.min.js" %}"></script>
 
   </body>
-l
 </html>
