@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from . import dev_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +21,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z60keql%8z7#hsfbb*a^#h$k8^p07$*2ksl5lac!%yi3cqa*#u'
+# SECRET_KEY = 'z60keql%8z7#hsfbb*a^#h$k8^p07$*2ksl5lac!%yi3cqa*#u'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'z60keql%8z7#hsfbb*a^#h$k8^p07$*2ksl5lac!%yi3cqa*#u')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['127.0.0.1', 'kintawer.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -79,8 +82,14 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'blogdb',
+        'USER': 'blog_admin',
+        'PASSWORD': '6OmzHd82',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -136,14 +145,14 @@ FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier' ,'code_view'
         'url', 'video')
 
 # SMTP settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-DEFAULT_FROM_EMAIL = ''
-SERVER_EMAIL = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_BACKEND = dev_settings.EMAIL_BACKEND
+EMAIL_USE_TLS = dev_settings.EMAIL_USE_TLS
+EMAIL_HOST = dev_settings.EMAIL_HOST
+EMAIL_PORT = dev_settings.EMAIL_PORT
+EMAIL_HOST_USER = dev_settings.EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = dev_settings.DEFAULT_FROM_EMAIL
+SERVER_EMAIL = dev_settings.SERVER_EMAIL
+EMAIL_HOST_PASSWORD = dev_settings.EMAIL_HOST_PASSWORD
 
 # getting email and password from dev_settings.py
 try:
