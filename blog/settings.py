@@ -21,14 +21,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'z60keql%8z7#hsfbb*a^#h$k8^p07$*2ksl5lac!%yi3cqa*#u'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'z60keql%8z7#hsfbb*a^#h$k8^p07$*2ksl5lac!%yi3cqa*#u')
+SECRET_KEY = dev_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = dev_settings.DEBUG
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = [
+    'seemsgoodblog.ru',
+    'www.seemsgoodblog.ru',
+    '127.0.0.1',
+
+]
 
 
 # Application definition
@@ -80,19 +83,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'blogdb',
-        'USER': 'blog_admin',
-        'PASSWORD': '6OmzHd82',
-        'HOST': '127.0.0.1',
-        'PORT': '',
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
+DATABASES = dev_settings.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -131,7 +122,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "venv/lib/python3.6/site-packages/django/contrib/admin/static"),
+
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
@@ -158,11 +154,11 @@ EMAIL_HOST_PASSWORD = dev_settings.EMAIL_HOST_PASSWORD
 try:
     from .dev_settings import *
 except ImportError:
-    pass
+    print('Create "dev_settings.py"!')
 
 # REDIS related settings
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
-BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+REDIS_HOST = dev_settings.REDIS_HOST
+REDIS_PORT = dev_settings.REDIS_PORT
+BROKER_URL = dev_settings.BROKER_URL
+BROKER_TRANSPORT_OPTIONS = dev_settings.BROKER_TRANSPORT_OPTIONS
+CELERY_RESULT_BACKEND = dev_settings.CELERY_RESULT_BACKEND

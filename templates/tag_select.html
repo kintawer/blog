@@ -25,34 +25,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-md-10 mx-auto">
-				{% for post in tag.posts.all %}
-					<div class="post-preview">
-						<a href="{{ post.get_absolute_url }}">
-							<h2 class="post-title">
-								{{ post.title }}
-							</h2>
-							<h3 class="post-subtitle">
-								{{ post.sub_title }}
-							</h3>
-						</a>
-						<p class="post-meta">Опубликовано
-							<a href="{% url 'about' %}">Автором</a>
-							{{ post.publish_date|date }}</p>
-
-					<!-- Tags -->
-						{% if post.tags.all %}
-							<p class="post-meta">Теги:
-								{% for tag in post.tags.all %}
-								<a href="{{ tag.get_absolute_url }}">{{ tag.title }} </a>
-								{% endfor %}
-							</p>
-						{% endif %}
-					</div>
-
-					<hr>
-
-				{% endfor %}
-
+				{% include "post_card.html" with posts=tag.posts.all %}
 			</div>
 		</div>
 	</div>

@@ -26,7 +26,6 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
-    # category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     sub_title = models.TextField(blank=True, null=True, default='')
     bg_img = models.ImageField(upload_to='bg_posts/', blank=True)
@@ -35,6 +34,7 @@ class Post(models.Model):
     slug = models.SlugField(default='slug', unique=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     is_notified = models.BooleanField(auto_created=True, default=False, blank=False)
+    viewers = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         return reverse('post_select', kwargs={'slug': self.slug})
@@ -47,6 +47,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Viewer(models.Model):
+    ip = models.CharField(max_length=20, blank=True, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} post: {}'.format(self.ip, self.post.title)
 
 
 class Subscribe(models.Model):

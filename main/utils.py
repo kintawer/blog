@@ -1,3 +1,4 @@
+from . import models
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -60,3 +61,22 @@ class ObjectDeleteMixin(View):
         obj = get_object_or_404(self.model, slug__iexact=slug)
         obj.delete()
         return redirect(self.redirect_url)
+
+
+def get_post_with_comments(slug):
+    post = get_object_or_404(models.Post, slug__iexact=slug)
+    try:
+        comments = models.Comment.objects.filter(post=post.id).order_by('date').reverse()
+    except models.Comment.DoesNotExist:
+        comments = None
+
+    return post, comments
+
+
+def get_user_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

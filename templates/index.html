@@ -9,7 +9,11 @@
 				<div class="col-lg-8 col-md-10 mx-auto">
 					<div class="site-heading">
 						<h1>Seems Good Blog</h1>
-						<span class="subheading">Мой блог обо всем.<br>Enjoy ;)</span>
+						{% if not request.GET.search %}
+						<span class="subheading">Мой блог обо всем.<br><br>Enjoy ;)</span>
+						{% else %}
+						<span class="subheading">Результаты поиска:<br><br><kbd>{{ request.GET.search }}</kbd></span>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -22,34 +26,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-md-10 mx-auto">
-				{% for post in posts %}
-					<div class="post-preview">
-						<a href="{{ post.get_absolute_url }}">
-							<h2 class="post-title">
-								{{ post.title }}
-							</h2>
-							<h3 class="post-subtitle">
-								{{ post.sub_title }}
-							</h3>
-						</a>
-						<p class="post-meta">Опубликовано
-							<a href="{% url 'about' %}">Автором</a>
-							{{ post.publish_date|date }}</p>
-
-
-					<!-- Tags -->
-						{% if post.tags.all %}
-							<p class="post-meta">Теги:
-								{% for tag in post.tags.all %}
-								<a href="{{ tag.get_absolute_url }}">{{ tag.title }} </a>
-								{% endfor %}
-							</p>
-						{% endif %}
-
-
-					</div>
-					<hr>
-				{% endfor %}
+				{% include "post_card.html" with posts=posts %}
 
 				<!-- Paginator -->
 			{% if posts.paginator.num_pages != 1 %}
