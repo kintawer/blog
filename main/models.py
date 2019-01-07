@@ -75,14 +75,13 @@ def post_post_save(sender, instance, signal, *args, **kwargs):
     # Send notification
     if not instance.is_notified:
 
-        instance.is_notified = True
-        instance.save()
-
         sub_list = []
         for sub in Subscribe.objects.filter(is_active=True):
             sub_list.append(sub.get_email_with_key())
 
         if sub_list:
+            instance.is_notified = True
+            instance.save()
             send_post_email.delay(sub_list=sub_list, post_title=instance.title, slug=instance.slug)
 
 
